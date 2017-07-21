@@ -22,10 +22,16 @@ const mkExtPropSelector = _.memoize(propName =>
 const recordsSelector =
   mkExtPropSelector('records')
 
+const accountingInfoSelector =
+  mkExtPropSelector('accountingInfo')
+
+// import { selectorTester } from './utils'
+
 export {
   admiralIdSelector,
   extSelector,
   mkExtPropSelector,
 
   recordsSelector,
+  accountingInfoSelector,
 }

@@ -16,6 +16,10 @@ const actionCreator = {
     type: '@poi-plugin-mini-senka@records@Modify',
     modifier,
   }),
+  accountingInfoReplace: newState => ({
+    type: '@poi-plugin-mini-senka@accountingInfo@Replace',
+    newState,
+  }),
   recordsNewExp: (exp, time) =>
     actionCreator.recordsModify(
       modifyRecordByTime(

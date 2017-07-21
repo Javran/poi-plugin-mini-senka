@@ -46,6 +46,11 @@ const computeAccountingInfo = (...args) => {
   return {timestamp, label}
 }
 
+// note that label is derived from timestamp
+const isAccountingInfoEqual = (a,b) =>
+  a.timestamp === b.timestamp
+
 export {
   computeAccountingInfo,
+  isAccountingInfoEqual,
 }
