@@ -1,26 +1,13 @@
-import { subReducer as networkSubReducer } from './network'
+// import { subReducer as expTrackerReducer } from './exp-tracker'
+// import { subReducer as sortieTrackerReducer } from './sortie-tracker'
+import { reducer } from './state'
 
-const initState = {
-  records: null,
-}
-
-const reducer = (state = initState, action) => {
-  if (action.type === '@poi-plugin-mini-senka@Modify') {
-    const {modifier} = action
-    return modifier(state)
-  }
-
-  // only handle network when our records are available
-  if (state.records !== null) {
-    return networkSubReducer(state, action)
-  }
-
-  return state
-}
+const getInitState = () =>
+  reducer(undefined, {type: '@@INIT'})
 
 export * from './action-creator'
+export * from './state'
 
 export {
-  initState,
-  reducer,
+  getInitState,
 }

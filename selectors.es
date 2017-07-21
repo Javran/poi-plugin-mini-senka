@@ -5,7 +5,7 @@ import {
   extensionSelectorFactory,
 } from 'views/utils/selectors'
 
-import { initState } from './store'
+import { getInitState } from './store'
 
 const admiralIdSelector = createSelector(
   basicSelector,
@@ -14,7 +14,7 @@ const admiralIdSelector = createSelector(
 
 const extSelector = createSelector(
   extensionSelectorFactory('poi-plugin-mini-senka'),
-  ext => _.isEmpty(ext) ? initState : ext)
+  ext => _.isEmpty(ext) ? getInitState() : ext)
 
 const mkExtPropSelector = _.memoize(propName =>
   createSelector(extSelector, ext => ext[propName]))

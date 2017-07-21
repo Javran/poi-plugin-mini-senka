@@ -5,7 +5,7 @@
 # make sure it's properly loaded
 node --version
 
-find . -type f -name '*.js' \
+find . -type f -name '*.es' \
   -not \( -path "./.git/*" -o \
           -path "./node_modules/*" -o \
           -path "./.eslintrc.js" -o \
