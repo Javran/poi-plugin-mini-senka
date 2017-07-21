@@ -1,13 +1,4 @@
-import { store } from 'views/create-store'
-import { boundActionCreator } from '../action-creator'
-
-const asyncRecordsNewSortie = func =>
-  store.dispatch(() => setTimeout(() =>
-    func(boundActionCreator.recordsNewSortie)))
-
-const asyncRecordsBossBattleResult = func =>
-  store.dispatch(() => setTimeout(() =>
-    func(boundActionCreator.recordsBossBattleResult)))
+import { asyncBoundActionCreator } from '../action-creator'
 
 const reducer = (state = null, action) => {
   if (
@@ -18,10 +9,9 @@ const reducer = (state = null, action) => {
     const mapId = Number(body.api_maparea_id)*10 + Number(body.api_mapinfo_no)
     const isBoss = Number(body.api_event_id) === 5
     if (action.type === '@@Response/kcsapi/api_req_map/start') {
-      asyncRecordsNewSortie(recordsNewSortie =>
+      asyncBoundActionCreator(({recordsNewSortie}) =>
         recordsNewSortie(mapId, time))
     }
-
     return {
       mapId,
       isBoss,
@@ -34,13 +24,22 @@ const reducer = (state = null, action) => {
       action.type === '@@Response/kcsapi/api_req_combined_battle/battleresult'
     )
   ) {
-    asyncRecordsBossBattleResult(recordsBossBattleResult => {
+    asyncBoundActionCreator(({recordsBossBattleResult}) => {
       const {body, time} = action
       const winRank = body.api_win_rank
       recordsBossBattleResult(state.mapId, winRank, time)
     })
     return null
   }
+
+  // we are definitely not in sortie if any of these API is called.
+  if (
+    action.type === '@@Response/kcsapi/api_port/port' ||
+    action.type === '@@Response/kcsapi/api_get_member/mapinfo'
+  ) {
+    return null
+  }
+
   return state
 }
 

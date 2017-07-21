@@ -2,8 +2,10 @@ import { store } from 'views/create-store'
 import { bindActionCreators } from 'redux'
 
 import { modifyObject } from '../utils'
-import { computeAccountingInfo } from '../senka-accounting'
-import { emptyEntity } from '../records'
+import {
+  modifyRecordByTime,
+  modifySortieByMapId,
+} from '../records'
 
 const actionCreator = {
   recordsReplace: newState => ({
@@ -14,66 +16,55 @@ const actionCreator = {
     type: '@poi-plugin-mini-senka@records@Modify',
     modifier,
   }),
-  recordsNewExp: (exp, time) => {
-    const accountingInfo = computeAccountingInfo(time)
-    return actionCreator.recordsModify(
-      modifyObject(
-        accountingInfo.label,
-        (entity = emptyEntity) =>
-          modifyObject(
-            'expRange',
-            expRange => ({
-              first: expRange.first || {exp, time},
-              last: {exp, time},
-            })
-          )(entity)
+  recordsNewExp: (exp, time) =>
+    actionCreator.recordsModify(
+      modifyRecordByTime(
+        time,
+        modifyObject(
+          'expRange',
+          expRange => ({
+            first: expRange.first || {exp, time},
+            last: {exp, time},
+          })
+        )
       )
-    )
-  },
-  recordsNewSortie: (mapId, time) => {
-    const accountingInfo = computeAccountingInfo(time)
-    return actionCreator.recordsModify(
-      modifyObject(
-        accountingInfo.label,
-        (entity = emptyEntity) =>
-          modifyObject(
-            'sorties',
+    ),
+  recordsNewSortie: (mapId, time) =>
+    actionCreator.recordsModify(
+      modifyRecordByTime(
+        time,
+        modifyObject(
+          'sorties',
+          modifySortieByMapId(
+            mapId,
             modifyObject(
-              mapId,
-              (mapSortieInfo = {}) =>
+              'count',
+              (count=0) => count+1
+            )
+          )
+        )
+      )
+    ),
+  recordsBossBattleResult: (mapId, winRank, time) =>
+    actionCreator.recordsModify(
+      modifyRecordByTime(
+        time,
+        modifyObject(
+          'sorties',
+          modifySortieByMapId(
+            mapId,
+            modifyObject(
+              'boss',
+              (boss = {}) =>
                 modifyObject(
-                  'count',
+                  winRank,
                   (count=0) => count+1
-                )(mapSortieInfo)
+                )(boss)
             )
-          )(entity)
+          )
+        )
       )
-    )
-  },
-  recordsBossBattleResult: (mapId, winRank, time) => {
-    const accountingInfo = computeAccountingInfo(time)
-    return actionCreator.recordsModify(
-      modifyObject(
-        accountingInfo.label,
-        (entity = emptyEntity) =>
-          modifyObject(
-            'sorties',
-            modifyObject(
-              mapId,
-              (mapSortieInfo = {}) =>
-                modifyObject(
-                  'boss',
-                  (boss = {}) =>
-                    modifyObject(
-                      winRank,
-                      (count=0) => count+1
-                    )(boss)
-                )(mapSortieInfo)
-            )
-          )(entity)
-      )
-    )
-  },
+    ),
 }
 
 const mapDispatchToProps = dispatch =>
@@ -82,8 +73,13 @@ const mapDispatchToProps = dispatch =>
 const boundActionCreator =
   mapDispatchToProps(store.dispatch)
 
+const asyncBoundActionCreator = func =>
+  store.dispatch(() => setTimeout(() =>
+    func(boundActionCreator)))
+
 export {
   actionCreator,
   mapDispatchToProps,
   boundActionCreator,
+  asyncBoundActionCreator,
 }

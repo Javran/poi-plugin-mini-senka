@@ -1,16 +1,11 @@
-import { store } from 'views/create-store'
-import { boundActionCreator } from '../action-creator'
-
-const asyncRecordsNewExp = func =>
-  store.dispatch(() => setTimeout(() =>
-    func(boundActionCreator.recordsNewExp)))
+import { asyncBoundActionCreator } from '../action-creator'
 
 const reducer = (state = null, action) => {
   if (
     action.type === '@@Response/kcsapi/api_get_member/basic' ||
     action.type === '@@Response/kcsapi/api_get_member/record'
   ) {
-    asyncRecordsNewExp(recordsNewExp => {
+    asyncBoundActionCreator(({recordsNewExp}) => {
       const exp = action.body.api_experience[0]
       const {time} = action
       recordsNewExp(exp,time)
@@ -23,7 +18,7 @@ const reducer = (state = null, action) => {
     action.type === '@@Response/kcsapi/api_req_sortie/battleresult' ||
     action.type === '@@Response/kcsapi/api_req_combined_battle/battleresult'
   ) {
-    asyncRecordsNewExp(recordsNewExp => {
+    asyncBoundActionCreator(({recordsNewExp}) => {
       const exp = action.body.api_member_exp
       const {time} = action
       recordsNewExp(exp,time)

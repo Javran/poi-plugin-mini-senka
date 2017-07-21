@@ -1,5 +1,7 @@
 import { ensureDirSync, readJsonSync, writeJsonSync } from 'fs-extra'
 import { join } from 'path-extra'
+import { computeAccountingInfo } from './senka-accounting'
+import { modifyObject } from './utils'
 
 const emptyConfig = {
   $dataVersion: '0.0.1',
@@ -22,6 +24,20 @@ const emptyEntity = {
      */
   },
 }
+
+const modifyRecordByTime = (time, modifier) => {
+  const accountingInfo = computeAccountingInfo(time)
+  return modifyObject(
+    accountingInfo.label,
+    (entity = emptyEntity) => modifier(entity)
+  )
+}
+
+const modifySortieByMapId = (mapId, modifier) =>
+  modifyObject(
+    mapId,
+    (mapSortieInfo = {}) =>
+      modifier(mapSortieInfo))
 
 const getRecordFilePath = admiralId => {
   const { APPDATA_PATH } = window
@@ -61,7 +77,8 @@ const saveRecords = (admiralId, recordObj) => {
 }
 
 export {
+  modifyRecordByTime,
+  modifySortieByMapId,
   loadRecords,
   saveRecords,
-  emptyEntity,
 }
