@@ -8,7 +8,7 @@ const reducer = (state = null, action) => {
     asyncBoundActionCreator(({recordsNewExp}) => {
       const exp = action.body.api_experience[0]
       const {time} = action
-      recordsNewExp(exp,time)
+      recordsNewExp(exp,time,action)
     })
     return state
   }
@@ -21,7 +21,7 @@ const reducer = (state = null, action) => {
     asyncBoundActionCreator(({recordsNewExp}) => {
       const exp = action.body.api_member_exp
       const {time} = action
-      recordsNewExp(exp,time)
+      recordsNewExp(exp,time,action)
     })
     return state
   }

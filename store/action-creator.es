@@ -1,5 +1,7 @@
-import { store } from 'views/create-store'
+import _ from 'lodash'
+
 import { bindActionCreators } from 'redux'
+import { store } from 'views/create-store'
 
 import { modifyObject } from '../utils'
 import {
@@ -20,19 +22,50 @@ const actionCreator = {
     type: '@poi-plugin-mini-senka@accountingInfo@Replace',
     newState,
   }),
-  recordsNewExp: (exp, time) =>
-    actionCreator.recordsModify(
+  recordsNewExp: (exp, time, action) => {
+    const newExpInfo = {exp, time}
+    const updateExpRange =
+      modifyObject(
+        'expRange',
+        expRange => {
+          if (! _.isInteger(exp)) {
+            console.error(`exp is not an integer, actual type: ${typeof exp}`)
+            console.error('triggering action:', action)
+            return expRange
+          }
+
+          if (expRange.first) {
+            if (exp < expRange.first.exp) {
+              console.error(
+                `inequality violation: ${exp}(exp) < ${expRange.first.exp} (fst.exp)`)
+              console.error('triggering action:', action)
+              return expRange
+            }
+          }
+
+          if (expRange.last) {
+            if (exp < expRange.last.exp) {
+              console.error(
+                `inequality violation: ${exp}(exp) < ${expRange.last.exp} (lst.exp)`)
+              console.error('triggering action:', action)
+              return expRange
+            }
+          }
+
+          return {
+            ...expRange,
+            first: expRange.first || newExpInfo,
+            last: newExpInfo,
+          }
+        })
+
+    return actionCreator.recordsModify(
       modifyRecordByTime(
         time,
-        modifyObject(
-          'expRange',
-          expRange => ({
-            first: expRange.first || {exp, time},
-            last: {exp, time},
-          })
-        )
+        updateExpRange
       )
-    ),
+    )
+  },
   recordsNewSortie: (mapId, time) =>
     actionCreator.recordsModify(
       modifyRecordByTime(
