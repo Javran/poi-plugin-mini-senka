@@ -1,7 +1,6 @@
 import { observer } from 'redux-observers'
 import { createStructuredSelector } from 'reselect'
 import { recordsSelector, admiralIdSelector } from '../selectors'
-import { shallowEqual } from '../utils'
 import { saveRecords } from '../records'
 
 const recordsObserver = observer(
@@ -14,7 +13,7 @@ const recordsObserver = observer(
       cur.admiralId !== null &&
       cur.admiralId === prev.admiralId &&
       cur.records !== null && prev.records !== null &&
-      ! shallowEqual(cur.records,prev.records)
+      cur.records !== prev.records
     ) {
       const {admiralId, records} = cur
       setTimeout(() =>
