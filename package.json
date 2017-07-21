@@ -1,0 +1,51 @@
+{
+  "name": "poi-plugin-mini-senka",
+  "version": "0.0.1",
+  "description": "mini senka",
+  "main": "index.es",
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register --recursive"
+  },
+  "keywords": [
+    "kancolle",
+    "poi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Javran/poi-plugin-mini-senka.git"
+  },
+  "author": {
+    "name": "Javran",
+    "url": "https://github.com/Javran"
+  },
+  "license": "MIT",
+  "poiPlugin": {
+    "title": "Mini Senka",
+    "priority": 90,
+    "icon": "wheelchair"
+  },
+  "bugs": {
+    "url": "https://github.com/Javran/poi-plugin-mini-senka/issues"
+  },
+  "homepage": "https://github.com/Javran/poi-plugin-mini-senka#readme",
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015-node6": "^0.4.0",
+    "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^7.1.0",
+    "fs-extra": "^3.0.1",
+    "mocha": "^3.2.0",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
+    "path-extra": "^4.1.0",
+    "shallowequal": "^1.0.2"
+  },
+  "dependencies": {}
+}
