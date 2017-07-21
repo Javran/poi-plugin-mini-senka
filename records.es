@@ -14,11 +14,11 @@ const emptyEntity = {
     first: null,
     last: null,
   },
-  sortieCounts: {
+  sorties: {
     /*
        keys are mapIds (e.g. 54, 15)
        values are of shape:
-       { total: <number>, boss: <number> }
+       { count: <number>, boss: {<rank>: <number>} }
      */
   },
 }
@@ -34,6 +34,7 @@ const updateConfig = records => {
   if (! records || records.$dataVersion !== emptyConfig.$dataVersion) {
     throw new Error(`validation failed for records, version mismatched`)
   }
+
   return records
 }
 

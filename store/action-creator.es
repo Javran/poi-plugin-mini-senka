@@ -21,10 +21,58 @@ const actionCreator = {
         accountingInfo.label,
         (entity = emptyEntity) =>
           modifyObject(
-            'expRange', expRange => ({
+            'expRange',
+            expRange => ({
               first: expRange.first || {exp, time},
               last: {exp, time},
-            }))(entity)))
+            })
+          )(entity)
+      )
+    )
+  },
+  recordsNewSortie: (mapId, time) => {
+    const accountingInfo = computeAccountingInfo(time)
+    return actionCreator.recordsModify(
+      modifyObject(
+        accountingInfo.label,
+        (entity = emptyEntity) =>
+          modifyObject(
+            'sorties',
+            modifyObject(
+              mapId,
+              (mapSortieInfo = {}) =>
+                modifyObject(
+                  'count',
+                  (count=0) => count+1
+                )(mapSortieInfo)
+            )
+          )(entity)
+      )
+    )
+  },
+  recordsBossBattleResult: (mapId, winRank, time) => {
+    const accountingInfo = computeAccountingInfo(time)
+    return actionCreator.recordsModify(
+      modifyObject(
+        accountingInfo.label,
+        (entity = emptyEntity) =>
+          modifyObject(
+            'sorties',
+            modifyObject(
+              mapId,
+              (mapSortieInfo = {}) =>
+                modifyObject(
+                  'boss',
+                  (boss = {}) =>
+                    modifyObject(
+                      winRank,
+                      (count=0) => count+1
+                    )(boss)
+                )(mapSortieInfo)
+            )
+          )(entity)
+      )
+    )
   },
 }
 

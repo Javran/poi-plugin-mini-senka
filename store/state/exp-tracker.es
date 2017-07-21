@@ -6,10 +6,10 @@ const asyncRecordsNewExp = func =>
     func(boundActionCreator.recordsNewExp)))
 
 const reducer = (state = null, action) => {
-  if ([
-    '@@Response/kcsapi/api_get_member/basic',
-    '@@Response/kcsapi/api_get_member/record',
-  ].includes(action.type)) {
+  if (
+    action.type === '@@Response/kcsapi/api_get_member/basic' ||
+    action.type === '@@Response/kcsapi/api_get_member/record'
+  ) {
     asyncRecordsNewExp(recordsNewExp => {
       const exp = action.body.api_experience[0]
       const {time} = action
@@ -18,11 +18,11 @@ const reducer = (state = null, action) => {
     return state
   }
 
-  if ([
-    '@@Response/kcsapi/api_req_mission/result',
-    '@@Response/kcsapi/api_req_sortie/battleresult',
-    '@@Response/kcsapi/api_req_combined_battle/battleresult',
-  ].includes(action.type)) {
+  if (
+    action.type === '@@Response/kcsapi/api_req_mission/result' ||
+    action.type === '@@Response/kcsapi/api_req_sortie/battleresult' ||
+    action.type === '@@Response/kcsapi/api_req_combined_battle/battleresult'
+  ) {
     asyncRecordsNewExp(recordsNewExp => {
       const exp = action.body.api_member_exp
       const {time} = action
