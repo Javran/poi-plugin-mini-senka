@@ -30,6 +30,10 @@ const actionCreator = {
     type: '@poi-plugin-mini-senka@config@Modify',
     modifier,
   }),
+  uiModify: modifier => ({
+    type: '@poi-plugin-mini-senka@ui@Modify',
+    modifier,
+  }),
   recordsNewExp: (exp, time, action) => {
     const newExpInfo = {exp, time}
     const updateExpRange =

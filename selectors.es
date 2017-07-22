@@ -28,6 +28,9 @@ const accountingInfoSelector =
 const configSelector =
   mkExtPropSelector('config')
 
+const uiSelector =
+  mkExtPropSelector('ui')
+
 const sortieTableConfigSelector = createSelector(
   configSelector,
   conf => conf.sortieTable)
@@ -120,6 +123,7 @@ export {
   recordsSelector,
   accountingInfoSelector,
   configSelector,
+  uiSelector,
   showAllConfigSelector,
   sortieInfoRowsSelector,
 }
