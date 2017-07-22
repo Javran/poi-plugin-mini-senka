@@ -22,6 +22,14 @@ const actionCreator = {
     type: '@poi-plugin-mini-senka@accountingInfo@Replace',
     newState,
   }),
+  configReplace: newState => ({
+    type: '@poi-plugin-mini-senka@config@Replace',
+    newState,
+  }),
+  configModify: modifier => ({
+    type: '@poi-plugin-mini-senka@config@Modify',
+    modifier,
+  }),
   recordsNewExp: (exp, time, action) => {
     const newExpInfo = {exp, time}
     const updateExpRange =

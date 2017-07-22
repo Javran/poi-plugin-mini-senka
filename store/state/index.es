@@ -3,12 +3,14 @@ import { reducer as records } from './records'
 import { reducer as expTracker } from './exp-tracker'
 import { reducer as sortieTracker } from './sortie-tracker'
 import { reducer as accountingInfo } from './accounting-info'
+import { reducer as config } from './config'
 
 const reducer = combineReducers({
   records,
   expTracker,
   sortieTracker,
   accountingInfo,
+  config,
 })
 
 export { reducer }

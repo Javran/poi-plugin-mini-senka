@@ -1,23 +1,170 @@
 import _ from 'lodash'
+import { createStructuredSelector } from 'reselect'
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
 import {
   Table, Panel, Button,
-  ButtonGroup, ButtonToolbar,
 } from 'react-bootstrap'
 
 import { PTyp } from '../../ptyp'
+import {
+  showAllConfigSelector,
+  sortieInfoRowsSelector,
+} from '../../selectors'
+import { mapDispatchToProps } from '../../store'
+import { modifyObject } from '../../utils'
 
-class SortiesPanel extends PureComponent {
+class SortiesPanelImpl extends PureComponent {
   static propTypes = {
-    sorties: PTyp.object.isRequired,
+    showAll: PTyp.bool.isRequired,
+    sortieInfoRows: PTyp.arrayOf(PTyp.shape({
+      mapId: PTyp.number.isRequired,
+      type: PTyp.oneOf(['starred','normal','hidden']).isRequired,
+      sortieInfo: PTyp.object.isRequired,
+    })).isRequired,
+    configModify: PTyp.func.isRequired,
+  }
+
+  modifySortieTable = modifier =>
+    this.props.configModify(
+      modifyObject('sortieTable',modifier))
+
+  handleToggleShowAll = () =>
+    this.modifySortieTable(
+      modifyObject('showAll', x => !x))
+
+  handleStarMap = mapId => () =>
+    this.modifySortieTable(
+      modifyObject(
+        'starredMapIds',
+        xs => [...xs, mapId]))
+
+  handleUnstarMap = mapId => () =>
+    this.modifySortieTable(
+      modifyObject(
+        'starredMapIds',
+        xs => xs.filter(x => x !== mapId)))
+
+  handleSwapStarredMap = (mapId, dir) => () =>
+    this.modifySortieTable(
+      modifyObject(
+        'starredMapIds',
+        xs => {
+          const otherIndF = {
+            up: x => x-1,
+            down: x => x+1,
+          }[dir]
+
+          const ind = xs.findIndex(x => x === mapId)
+          if (ind === -1) {
+            console.error(`mapId ${mapId} not found`)
+            return xs
+          }
+
+          const otherInd = otherIndF(ind)
+          if (otherInd < 0 || otherInd >= xs.length) {
+            console.error('invalid action')
+            return xs
+          }
+          const ys = [...xs]
+          ys[ind] = xs[otherInd]
+          ys[otherInd] = xs[ind]
+          return ys
+        }))
+
+  handleHideMap = mapId => () =>
+    this.modifySortieTable(
+      modifyObject(
+        'hiddenMapIds',
+        xs => [...xs, mapId]))
+
+  handleUnhideMap = mapId => () =>
+    this.modifySortieTable(
+      modifyObject(
+        'hiddenMapIds',
+        xs => xs.filter(x => x !== mapId)))
+
+  renderControlCell = (cellStyle, sortieInfoRow, index, sortieInfoRows) => {
+    const {type, mapId} = sortieInfoRow
+
+    const buttons =
+      type === 'starred' ? [
+        index > 0 && (
+          <Button
+            onClick={this.handleSwapStarredMap(mapId,'up')}
+            bsSize="xsmall"
+            style={{width: '40%', marginTop: 0}}>
+            <FontAwesome name="chevron-up" />
+          </Button>
+        ),
+        (
+          index+1 >= sortieInfoRows.length ||
+          sortieInfoRows[index+1].type !== 'starred'
+        ) ? (
+          <Button
+            onClick={this.handleUnstarMap(mapId)}
+            bsSize="xsmall"
+            style={{width: '40%', marginTop: 0}}>
+            <FontAwesome name="star-o" />
+          </Button>
+        ) : (
+          <Button
+            onClick={this.handleSwapStarredMap(mapId,'down')}
+            bsSize="xsmall"
+            style={{width: '40%', marginTop: 0}}>
+            <FontAwesome name="chevron-down" />
+          </Button>
+        ),
+      ] :
+      type === 'normal' ? [
+        <Button
+          onClick={this.handleStarMap(mapId)}
+          bsSize="xsmall"
+          style={{width: '40%', marginTop: 0}}>
+          <FontAwesome name="star" />
+        </Button>,
+        <Button
+          onClick={this.handleHideMap(mapId)}
+          bsSize="xsmall"
+          style={{width: '40%', marginTop: 0}}>
+          <FontAwesome name="ban" />
+        </Button>,
+      ] :
+      type === 'hidden' ? [
+        <Button
+          onClick={this.handleUnhideMap(mapId)}
+          bsSize="xsmall"
+          style={{width: '40%', marginTop: 0}}>
+          <FontAwesome name="plus" />
+        </Button>,
+      ] :
+      []
+
+    const btnLeft = _.get(buttons,0,null)
+    const btnRight = _.get(buttons,1,null)
+
+    return (
+      <td
+        style={{
+          ...cellStyle,
+          textAlign: 'center',
+        }}>
+        {
+          btnLeft
+        }
+        {
+          btnRight && ' '
+        }
+        {
+          btnRight
+        }
+      </td>
+    )
   }
 
   render() {
-    const {sorties} = this.props
-    const sortedMapIds =
-      Object.keys(sorties).map(Number).sort((x,y) => x-y)
-
+    const {showAll,sortieInfoRows} = this.props
     return (
       <Panel
         style={{marginBottom: 5}}
@@ -27,6 +174,8 @@ class SortiesPanel extends PureComponent {
               Sorties
             </div>
             <Button
+              onClick={this.handleToggleShowAll}
+              active={showAll}
               bsSize="xsmall"
               style={{
                 alignSelf: 'flex-end',
@@ -58,47 +207,48 @@ class SortiesPanel extends PureComponent {
           </thead>
           <tbody>
             {
-              sortedMapIds.map(mapId => {
+              sortieInfoRows.map((sortieInfoRow,ind) => {
+                const {mapId, type, sortieInfo} = sortieInfoRow
                 const mapArea = Math.floor(mapId/10)
                 const mapNo = mapId - mapArea*10
-                const sortieInfo = sorties[mapId]
-                const bossInfo = _.isEmpty(sortieInfo.boss) ? {} : sortieInfo.boss
+                const textClass =
+                  type === 'starred' ? 'text-primary' :
+                  type === 'normal' ? 'text-default' :
+                  type === 'hidden' ? 'text-muted' :
+                  ''
                 const cellStyle = {
                   verticalAlign: 'middle',
                   textAlign: 'center',
                 }
-                return sortieInfo && sortieInfo.count > 0 && (
+                return (
                   <tr key={mapId}>
-                    <td style={{
-                      ...cellStyle,
-                      fontSize: '1.1em',
-                      fontWeight: 'bold',
-                    }}>
-                      {`${mapArea}-${mapNo}`}
-                    </td>
-                    <td style={cellStyle}>
-                      {sortieInfo.count}
-                    </td>
-                    <td style={cellStyle}>
-                      {_.sum(Object.values(bossInfo))}
-                    </td>
                     <td
+                      className={textClass}
                       style={{
                         ...cellStyle,
-                        textAlign: 'center',
+                        fontSize: '1.1em',
+                        fontWeight: 'bold',
                       }}>
-                      <Button
-                        bsSize="xsmall"
-                        style={{width: '40%', marginTop: 0}}>
-                        <FontAwesome name="chevron-up" />
-                      </Button>
-                      {' '}
-                      <Button
-                        bsSize="xsmall"
-                        style={{width: '40%', marginTop: 0}}>
-                        <FontAwesome name="chevron-down" />
-                      </Button>
+                      {`${mapArea}-${mapNo}`}
                     </td>
+                    <td
+                      className={textClass}
+                      style={cellStyle}>
+                      {sortieInfo.sortieCount}
+                    </td>
+                    <td
+                      className={textClass}
+                      style={cellStyle}>
+                      {sortieInfo.bossCount}
+                    </td>
+                    {
+                      this.renderControlCell(
+                        cellStyle,
+                        sortieInfoRow,
+                        ind,
+                        sortieInfoRows,
+                      )
+                    }
                   </tr>
                 )
               })
@@ -109,5 +259,13 @@ class SortiesPanel extends PureComponent {
     )
   }
 }
+
+const SortiesPanel = connect(
+  createStructuredSelector({
+    showAll: showAllConfigSelector,
+    sortieInfoRows: sortieInfoRowsSelector,
+  }),
+  mapDispatchToProps,
+)(SortiesPanelImpl)
 
 export { SortiesPanel }

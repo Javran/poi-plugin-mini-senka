@@ -126,7 +126,6 @@ class CurrentSenkaViewImpl extends Component {
     const senkaInfo = _.get(records,dataLabel)
     const firstRecord = _.get(senkaInfo,'expRange.first',null)
     const lastRecord = _.get(senkaInfo,'expRange.last',null)
-    const sorties = _.get(senkaInfo,'sorties',{})
     return (
       <Panel>
         <div style={{display: 'flex', alignItems: 'stretch'}}>
@@ -153,9 +152,7 @@ class CurrentSenkaViewImpl extends Component {
             {this.renderSenkaDiff(senkaInfo)}
           </Panel>
         </div>
-        <SortiesPanel
-          sorties={sorties}
-        />
+        <SortiesPanel />
       </Panel>
     )
   }

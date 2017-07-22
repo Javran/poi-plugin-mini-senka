@@ -2,6 +2,7 @@ import { join } from 'path-extra'
 import React, { Component } from 'react'
 
 import { CurrentSenkaView } from './current-senka-view'
+import { HistorySenkaView } from './history-senka-view'
 
 class MiniSenkaMain extends Component {
   render() {
@@ -12,7 +13,7 @@ class MiniSenkaMain extends Component {
           href={join(__dirname, '..', 'assets', 'mini-senka.css')}
         />
         <CurrentSenkaView />
-        <div>History</div>
+        <HistorySenkaView />
       </div>
     )
   }
