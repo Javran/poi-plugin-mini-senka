@@ -1,7 +1,7 @@
 import { ensureDirSync, readJsonSync, writeJsonSync } from 'fs-extra'
 import { join } from 'path-extra'
+import { modifyObject } from 'subtender'
 import { computeAccountingInfo } from './senka-accounting'
-import { modifyObject } from './utils'
 
 const emptyConfig = {
   $dataVersion: '0.0.1',

@@ -3,6 +3,8 @@ import { createStructuredSelector } from 'reselect'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import FontAwesome from 'react-fontawesome'
+import { modifyObject } from 'subtender'
+
 import {
   Table, Panel, Button,
 } from 'react-bootstrap'
@@ -13,7 +15,6 @@ import {
   sortieInfoRowsSelector,
 } from '../../selectors'
 import { mapDispatchToProps } from '../../store'
-import { modifyObject } from '../../utils'
 
 class SortiesPanelImpl extends PureComponent {
   static propTypes = {

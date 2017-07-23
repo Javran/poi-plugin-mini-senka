@@ -8,9 +8,9 @@ import {
   ButtonGroup,
 } from 'react-bootstrap'
 import moment from 'moment'
+import { modifyObject } from 'subtender'
 
 import { PTyp } from '../../ptyp'
-import { modifyObject } from '../../utils'
 
 import {
   recordPrefixesInfoSelector,

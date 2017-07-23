@@ -2,8 +2,8 @@ import _ from 'lodash'
 
 import { bindActionCreators } from 'redux'
 import { store } from 'views/create-store'
+import { modifyObject } from 'subtender'
 
-import { modifyObject } from '../utils'
 import {
   modifyRecordByTime,
   modifySortieByMapId,
