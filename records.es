@@ -25,6 +25,11 @@ const emptyEntity = {
   },
 }
 
+const emptySortieInfo = {
+  count: 0,
+  boss: {},
+}
+
 const modifyRecordByTime = (time, modifier) => {
   const accountingInfo = computeAccountingInfo(time)
   return modifyObject(
@@ -36,7 +41,7 @@ const modifyRecordByTime = (time, modifier) => {
 const modifySortieByMapId = (mapId, modifier) =>
   modifyObject(
     mapId,
-    (mapSortieInfo = {}) =>
+    (mapSortieInfo = emptySortieInfo) =>
       modifier(mapSortieInfo))
 
 const getRecordFilePath = admiralId => {
