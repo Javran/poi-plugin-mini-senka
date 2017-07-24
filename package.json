@@ -1,6 +1,6 @@
 {
   "name": "poi-plugin-mini-senka",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Simple Senka & Sortie Recorder",
   "main": "index.es",
   "scripts": {
