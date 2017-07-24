@@ -10,6 +10,7 @@ import {
 } from 'react-bootstrap'
 
 import { PTyp } from '../../ptyp'
+import { __ } from '../../tr'
 import {
   showAllConfigSelector,
   sortieInfoRowsSelector,
@@ -172,7 +173,7 @@ class SortiesPanelImpl extends PureComponent {
         header={
           <div style={{display: 'flex', alignItems: 'center'}}>
             <div style={{flex: 1}}>
-              Sorties
+              {__('Sorties')}
             </div>
             <Button
               onClick={this.handleToggleShowAll}
@@ -182,7 +183,7 @@ class SortiesPanelImpl extends PureComponent {
                 alignSelf: 'flex-end',
                 marginTop: 0,
               }}>
-              Show All
+              {__('SortieTable.ShowAll')}
             </Button>
           </div>
         }>
@@ -193,16 +194,16 @@ class SortiesPanelImpl extends PureComponent {
           <thead>
             <tr>
               <th style={{width: '27%', textAlign: 'center'}}>
-                Map
+                {__('SortieTable.Map')}
               </th>
               <th style={{width: '25%', textAlign: 'center'}}>
-                Sortie
+                {__('SortieTable.Sortie')}
               </th>
               <th style={{width: '25%', textAlign: 'center'}}>
-                Boss
+                {__('SortieTable.Boss')}
               </th>
               <th style={{width: 'auto', textAlign: 'center'}}>
-                Control
+                {__('SortieTable.Control')}
               </th>
             </tr>
           </thead>

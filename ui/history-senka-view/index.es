@@ -11,6 +11,7 @@ import moment from 'moment'
 import { modifyObject } from 'subtender'
 
 import { PTyp } from '../../ptyp'
+import { __ } from '../../tr'
 
 import {
   monthRecordsInfoSelector,
@@ -48,7 +49,7 @@ class HistorySenkaViewImpl extends Component {
 
   monthToStr = month => {
     if (month === null)
-      return 'None'
+      return __('HistoryNotSelected')
 
     const {monthRecordsInfo} = this.props
     const info = monthRecordsInfo.find(x => x.month === month)
@@ -65,7 +66,7 @@ class HistorySenkaViewImpl extends Component {
     return (
       <Panel
         header={
-          <div>History</div>
+          <div>{__('History')}</div>
         }>
         <ButtonGroup
           style={{padding: 10}}
@@ -91,13 +92,13 @@ class HistorySenkaViewImpl extends Component {
           <thead>
             <tr>
               <th style={{width: '32%', textAlign: 'center'}}>
-                First Record
+                {__('FirstRecord')}
               </th>
               <th style={{width: '32%', textAlign: 'center'}}>
-                Last Record
+                {__('LastRecord')}
               </th>
               <th style={{width: 'auto', textAlign: 'center'}}>
-                Senka
+                {__('Senka')}
               </th>
             </tr>
           </thead>

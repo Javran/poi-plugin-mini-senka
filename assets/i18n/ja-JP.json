@@ -1,0 +1,27 @@
+{
+  "Package": {
+    "Title": "Mini Senka",
+    "Desc": "Simple Senka & Sortie Recorder"
+  },
+
+  "Time": "Time",
+
+  "NextAccounting": "Next Accounting",
+  "FirstRecord": "First Record",
+  "LastRecord": "Last Record",
+
+  "Senka": "Senka",
+
+  "Sorties": "Sorties",
+
+  "SortieTable": {
+    "ShowAll": "Show All",
+    "Map": "Map",
+    "Sortie": "Sortie",
+    "Boss": "Boss",
+    "Control": "Control"
+  },
+
+  "History": "History",
+  "HistoryNotSelected": "Not Selected"
+}

@@ -1,0 +1,27 @@
+{
+  "Package": {
+    "Title": "迷你戰果",
+    "Desc": "簡易戰果 & 出擊記錄"
+  },
+
+  "Time": "時間",
+
+  "NextAccounting": "下次結算",
+  "FirstRecord": "最初記錄",
+  "LastRecord": "最後記錄",
+
+  "Senka": "戰果",
+
+  "Sorties": "出擊",
+
+  "SortieTable": {
+    "ShowAll": "顯示全部",
+    "Map": "海域",
+    "Sortie": "出擊數",
+    "Boss": "Boss",
+    "Control": "控制"
+  },
+
+  "History": "歷史",
+  "HistoryNotSelected": "未選擇"
+}

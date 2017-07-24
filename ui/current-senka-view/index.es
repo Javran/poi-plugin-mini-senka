@@ -3,10 +3,9 @@ import { createStructuredSelector } from 'reselect'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  Table,
   Panel,
 } from 'react-bootstrap'
-import moment from 'moment'
+import { __ } from '../../tr'
 
 import {
   recordSelector,
@@ -60,24 +59,24 @@ class CurrentSenkaViewImpl extends Component {
         <div style={{display: 'flex', alignItems: 'stretch'}}>
           <Panel
             style={{width: '45%', marginRight: 10}}
-            header={<div>Time</div>}>
+            header={<div>{__('Time')}</div>}>
             <Timepiece
-              header="Next Accounting"
-              timestamp={accountingInfo.timestamp} />
-            <Timepiece
-              header="First Record"
+              header={__('FirstRecord')}
               timestamp={
                 _.get(firstRecord,'time') || null
               } />
             <Timepiece
-              header="Last Record"
+              header={__('LastRecord')}
               timestamp={
                 _.get(lastRecord,'time') || null
               } />
+            <Timepiece
+              header={__('NextAccounting')}
+              timestamp={accountingInfo.timestamp} />
           </Panel>
           <Panel
             style={{width: '55%'}}
-            header={<div>Senka</div>}>
+            header={<div>{__('Senka')}</div>}>
             {
               this.renderSenkaDiff(senkaInfo)
             }
