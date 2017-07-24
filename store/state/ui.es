@@ -1,6 +1,6 @@
 const initState = {
   history: {
-    prefix: null,
+    month: null,
   },
 }
 

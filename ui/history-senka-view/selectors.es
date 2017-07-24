@@ -1,53 +1,41 @@
 import _ from 'lodash'
 import { createSelector } from 'reselect'
 import {
-  recordsSelector,
+  recordDataRootSelector,
   uiSelector,
 } from '../../selectors'
+import {
+  MonthRecords,
+} from '../../records'
 
-// records indexed by 2017-06, 2017-07, ...
-// values are arrays of [<label>, <record>]
-const grouppedRecordPairsSelector = createSelector(
-  recordsSelector,
-  records =>
-    _.groupBy(
-      _.toPairs(records)
-       .filter(([k,_v]) => ! k.startsWith('$')),
-      ([k,_v]) => k.slice(0,'XXXX-XX'.length))
-)
-
-const recordPrefixesInfoSelector = createSelector(
-  grouppedRecordPairsSelector,
-  grouppedRecordPairs =>
-    Object.entries(grouppedRecordPairs).map(([prefix, recordPairs]) => {
-      const tsFirst = _.min(_.compact(
-        recordPairs.map(([_k,v]) =>
-          _.get(v,'expRange.first.time'))))
-      const tsLast = _.max(_.compact(
-        recordPairs.map(([_k,v]) =>
-          _.get(v,'expRange.last.time'))))
-      return {prefix, tsFirst, tsLast}
+const monthRecordsInfoSelector = createSelector(
+  recordDataRootSelector,
+  recordDataRoot =>
+    recordDataRoot.map(({month, records: monthRecord}) => {
+      const tsFirst = _.get(_.first(monthRecord),'record.expRange.first.time')
+      const tsLast = _.get(_.last(monthRecord),'record.expRange.last.time')
+      return {month, tsFirst, tsLast}
     }).reverse()
 )
 
-const prefixSelector = createSelector(
+const monthSelector = createSelector(
   uiSelector,
-  ui => ui.history.prefix)
+  ui => ui.history.month)
 
-const historyInfoListSelector = createSelector(
-  grouppedRecordPairsSelector,
-  prefixSelector,
-  (grouppedRecordPairs, prefix) => {
-    if (prefix === null)
+const monthRecordInfoSelector = createSelector(
+  recordDataRootSelector,
+  monthSelector,
+  (recordDataRoot, month) => {
+    if (month === null)
       return []
-    const recordPairs = grouppedRecordPairs[prefix]
-    // reverse to make recent records show first
-    const sortedRecordPairs = _.sortBy(
-      recordPairs,
-      [([k,_v]) => k]
-    ).reverse()
 
-    const getInfo = ([key,record]) => {
+    const maybeMonthRecord = MonthRecords.find(month)(recordDataRoot)
+    if (! maybeMonthRecord)
+      return []
+
+    const dayRecords = maybeMonthRecord.records
+
+    const getInfo = ({key,record}) => {
       const tsFirst = _.get(record,'expRange.first.time')
       const expFirst = _.get(record,'expRange.first.exp')
       const tsLast = _.get(record,'expRange.last.time')
@@ -57,12 +45,12 @@ const historyInfoListSelector = createSelector(
         key, tsFirst, tsLast, expDiff,
       }
     }
-    return sortedRecordPairs.map(getInfo)
-  }
-)
+
+    return dayRecords.map(getInfo).reverse()
+  })
 
 export {
-  recordPrefixesInfoSelector,
-  prefixSelector,
-  historyInfoListSelector,
+  monthRecordsInfoSelector,
+  monthSelector,
+  monthRecordInfoSelector,
 }

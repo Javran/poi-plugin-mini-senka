@@ -13,9 +13,9 @@ import { modifyObject } from 'subtender'
 import { PTyp } from '../../ptyp'
 
 import {
-  recordPrefixesInfoSelector,
-  prefixSelector,
-  historyInfoListSelector,
+  monthRecordsInfoSelector,
+  monthSelector,
+  monthRecordInfoSelector,
 } from './selectors'
 
 import {
@@ -26,41 +26,41 @@ const fmtTime = t => moment(t).format('YYYY-MM-DD HH:mm')
 
 class HistorySenkaViewImpl extends Component {
   static propTypes = {
-    historyInfoList: PTyp.array.isRequired,
-    recordPrefixesInfo: PTyp.array.isRequired,
-    prefix: PTyp.string,
+    monthRecordInfo: PTyp.array.isRequired,
+    monthRecordsInfo: PTyp.array.isRequired,
+    month: PTyp.string,
     uiModify: PTyp.func.isRequired,
   }
 
   static defaultProps = {
-    prefix: null,
+    month: null,
   }
 
-  handleChangePrefix = prefix =>
+  handleChangeMonth = month =>
     this.props.uiModify(
       modifyObject(
         'history',
         modifyObject(
-          'prefix', () => prefix
+          'month', () => month
         )
       )
     )
 
-  prefixToStr = prefix => {
-    if (prefix === null)
+  monthToStr = month => {
+    if (month === null)
       return 'None'
 
-    const {recordPrefixesInfo} = this.props
-    const info = recordPrefixesInfo.find(x => x.prefix === prefix)
+    const {monthRecordsInfo} = this.props
+    const info = monthRecordsInfo.find(x => x.month === month)
     const {tsFirst, tsLast} = info
     return `${fmtTime(tsFirst)} ~ ${fmtTime(tsLast)}`
   }
 
   render() {
     const {
-      recordPrefixesInfo,
-      prefix,
-      historyInfoList,
+      monthRecordsInfo,
+      month,
+      monthRecordInfo,
     } = this.props
     return (
       <Panel
@@ -71,14 +71,14 @@ class HistorySenkaViewImpl extends Component {
           style={{padding: 10}}
           fill justified>
           <DropdownButton
-            onSelect={this.handleChangePrefix}
-            title={this.prefixToStr(prefix)}
+            onSelect={this.handleChangeMonth}
+            title={this.monthToStr(month)}
             id="mini-senka-history-label-dropdown">
             <MenuItem key="none" eventKey={null}>None</MenuItem>
             {
-              recordPrefixesInfo.map(({prefix: curPrefix}) => (
-                <MenuItem key={curPrefix} eventKey={curPrefix}>
-                  {this.prefixToStr(curPrefix)}
+              monthRecordsInfo.map(({month: curMonth}) => (
+                <MenuItem key={curMonth} eventKey={curMonth}>
+                  {this.monthToStr(curMonth)}
                 </MenuItem>
               ))
             }
@@ -103,7 +103,7 @@ class HistorySenkaViewImpl extends Component {
           </thead>
           <tbody>
             {
-              historyInfoList.map(historyInfo => {
+              monthRecordInfo.map(historyInfo => {
                 const {key, tsFirst, tsLast, expDiff} = historyInfo
                 const senkaDiff = expDiff * 7 / 10000
                 const cellStyle = {
@@ -142,9 +142,9 @@ class HistorySenkaViewImpl extends Component {
 
 const HistorySenkaView = connect(
   createStructuredSelector({
-    recordPrefixesInfo: recordPrefixesInfoSelector,
-    prefix: prefixSelector,
-    historyInfoList: historyInfoListSelector,
+    monthRecordsInfo: monthRecordsInfoSelector,
+    month: monthSelector,
+    monthRecordInfo: monthRecordInfoSelector,
   }),
   mapDispatchToProps,
 )(HistorySenkaViewImpl)

@@ -8,9 +8,8 @@ import {
 } from 'react-bootstrap'
 import moment from 'moment'
 
-import { computeAccountingInfo } from '../../senka-accounting'
 import {
-  recordsSelector,
+  recordSelector,
   accountingInfoSelector,
 } from '../../selectors'
 import { PTyp } from '../../ptyp'
@@ -18,83 +17,10 @@ import { PTyp } from '../../ptyp'
 import { Timepiece } from './timepiece'
 import { SortiesPanel } from './sorties-panel'
 
-const fmtTime = t => moment(t).format('YYYY-MM-DD HH:mm')
-
 class CurrentSenkaViewImpl extends Component {
   static propTypes = {
-    records: PTyp.object,
-    accountingInfo: PTyp.AccountingInfo.isRequired,
-  }
-
-  static defaultProps = {
-    records: null,
-  }
-
-  renderSenkaInfo = senkaInfo => {
-    const {expRange, sorties} = senkaInfo
-    const expBefore = expRange.first.exp
-    const expAfter = expRange.last.exp
-    const hqExpDiff = expAfter - expBefore
-    const senkaDiff = hqExpDiff * 7 / 10000
-
-    const sortedMapIds =
-      Object.keys(sorties).map(Number).sort((x,y) => x-y)
-
-    return (
-      <div>
-        <div>
-          <div style={{fontSize: '2rem'}}>
-            {fmtTime(expRange.first.time)}
-            {' ~ '}
-            {fmtTime(expRange.last.time)}
-          </div>
-        </div>
-        {
-          <div style={{fontSize: '3rem', textAlign: 'center'}}>
-            {
-              senkaDiff.toFixed(2)
-            }
-          </div>
-        }
-        <Table
-          striped bordered condensed hover>
-          <thead>
-            <tr>
-              <th>Map</th>
-              <th>Sortie</th>
-              <th>Boss</th>
-              <th>Control</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              sortedMapIds.map(mapId => {
-                const mapArea = Math.floor(mapId/10)
-                const mapNo = mapId - mapArea*10
-                const sortieInfo = sorties[mapId]
-                const bossInfo = _.isEmpty(sortieInfo.boss) ? {} : sortieInfo.boss
-                return sortieInfo && sortieInfo.count > 0 && (
-                  <tr key={mapId}>
-                    <td>
-                      {`${mapArea}-${mapNo}`}
-                    </td>
-                    <td>
-                      {sortieInfo.count}
-                    </td>
-                    <td>
-                      {_.sum(Object.values(bossInfo))}
-                    </td>
-                    <td>
-                      TODO
-                    </td>
-                  </tr>
-                )
-              })
-            }
-          </tbody>
-        </Table>
-      </div>
-    )
+    record: PTyp.object.isRequired,
+    accountingInfo: PTyp.object.isRequired,
   }
 
   renderSenkaDiff = senkaInfo => {
@@ -103,14 +29,18 @@ class CurrentSenkaViewImpl extends Component {
       fontWeight: 'bold',
       textAlign: 'center',
     }
+
     if (!senkaInfo) {
       return (<div style={commonStyle}>-</div>)
     }
 
     const {expRange} = senkaInfo
-    const expBefore = expRange.first.exp
-    const expAfter = expRange.last.exp
+    const expBefore = _.get(expRange.first, 'exp')
+    const expAfter = _.get(expRange.last, 'exp')
     const hqExpDiff = expAfter - expBefore
+    if (! _.isFinite(hqExpDiff)) {
+      return (<div style={commonStyle}>-</div>)
+    }
     const senkaDiff = hqExpDiff * 7 / 10000
 
     return (
@@ -121,9 +51,8 @@ class CurrentSenkaViewImpl extends Component {
   }
 
   render() {
-    const {records, accountingInfo} = this.props
-    const dataLabel = computeAccountingInfo(moment()).label
-    const senkaInfo = _.get(records,dataLabel)
+    const {accountingInfo} = this.props
+    const senkaInfo = this.props.record
     const firstRecord = _.get(senkaInfo,'expRange.first',null)
     const lastRecord = _.get(senkaInfo,'expRange.last',null)
     return (
@@ -149,7 +78,9 @@ class CurrentSenkaViewImpl extends Component {
           <Panel
             style={{width: '55%'}}
             header={<div>Senka</div>}>
-            {this.renderSenkaDiff(senkaInfo)}
+            {
+              this.renderSenkaDiff(senkaInfo)
+            }
           </Panel>
         </div>
         <SortiesPanel />
@@ -159,7 +90,7 @@ class CurrentSenkaViewImpl extends Component {
 }
 
 const CurrentSenkaView = connect(createStructuredSelector({
-  records: recordsSelector,
+  record: recordSelector,
   accountingInfo: accountingInfoSelector,
 }))(CurrentSenkaViewImpl)
 

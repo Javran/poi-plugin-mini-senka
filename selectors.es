@@ -6,6 +6,12 @@ import {
 } from 'views/utils/selectors'
 
 import { getInitState } from './store'
+import {
+  emptyEntity,
+  emptyConfig,
+  MonthRecords,
+  DayRecords,
+} from './records'
 
 const admiralIdSelector = createSelector(
   basicSelector,
@@ -31,6 +37,10 @@ const configSelector =
 const uiSelector =
   mkExtPropSelector('ui')
 
+const recordDataRootSelector = createSelector(
+  recordsSelector,
+  r => _.get(r,'records',emptyConfig.records))
+
 const sortieTableConfigSelector = createSelector(
   configSelector,
   conf => conf.sortieTable)
@@ -39,14 +49,23 @@ const showAllConfigSelector = createSelector(
   sortieTableConfigSelector,
   st => st.showAll)
 
-const sortiesSelector = createSelector(
+const recordSelector = createSelector(
+  recordDataRootSelector,
   accountingInfoSelector,
-  recordsSelector,
-  (accountingInfo, records) => {
-    const {label} = accountingInfo
-    const sorties = _.get(records,[label,'sorties'],{})
-    return sorties
-  })
+  (recordDataRoot, accountingInfo) => {
+    const maybeMonthRecord = MonthRecords.find(accountingInfo.month)(recordDataRoot)
+    if (! maybeMonthRecord)
+      return emptyEntity
+    const maybeDayRecord = DayRecords.find(accountingInfo.label)(maybeMonthRecord.records)
+    if (! maybeDayRecord)
+      return emptyEntity
+    return maybeDayRecord.record
+  }
+)
+
+const sortiesSelector = createSelector(
+  recordSelector,
+  record => record.sorties || {})
 
 const sortieInfoRowsSelector = createSelector(
   sortiesSelector,
@@ -126,4 +145,7 @@ export {
   uiSelector,
   showAllConfigSelector,
   sortieInfoRowsSelector,
+
+  recordDataRootSelector,
+  recordSelector,
 }

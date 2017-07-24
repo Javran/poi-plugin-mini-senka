@@ -43,7 +43,8 @@ const computeAccountingInfo = (...args) => {
   const accountingMoment = computeAccountingMoment(...args)
   const timestamp = accountingMoment.valueOf()
   const label = accountingMoment.format('YYYY-MM-DD|HH')
-  return {timestamp, label}
+  const month = accountingMoment.format('YYYY-MM')
+  return {timestamp, label, month}
 }
 
 // note that label is derived from timestamp

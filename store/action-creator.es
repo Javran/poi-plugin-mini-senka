@@ -5,7 +5,7 @@ import { store } from 'views/create-store'
 import { modifyObject } from 'subtender'
 
 import {
-  modifyRecordByTime,
+  modifyRecordByTimeNew,
   modifySortieByMapId,
 } from '../records'
 
@@ -72,7 +72,7 @@ const actionCreator = {
         })
 
     return actionCreator.recordsModify(
-      modifyRecordByTime(
+      modifyRecordByTimeNew(
         time,
         updateExpRange
       )
@@ -80,7 +80,7 @@ const actionCreator = {
   },
   recordsNewSortie: (mapId, time) =>
     actionCreator.recordsModify(
-      modifyRecordByTime(
+      modifyRecordByTimeNew(
         time,
         modifyObject(
           'sorties',
@@ -96,7 +96,7 @@ const actionCreator = {
     ),
   recordsBossBattleResult: (mapId, winRank, time) =>
     actionCreator.recordsModify(
-      modifyRecordByTime(
+      modifyRecordByTimeNew(
         time,
         modifyObject(
           'sorties',
