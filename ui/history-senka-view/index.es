@@ -85,57 +85,61 @@ class HistorySenkaViewImpl extends Component {
             }
           </DropdownButton>
         </ButtonGroup>
-        <Table
-          style={{tableLayout: 'fixed'}}
-          fill
-          bordered condensed hover>
-          <thead>
-            <tr>
-              <th style={{width: '32%', textAlign: 'center'}}>
-                {__('FirstRecord')}
-              </th>
-              <th style={{width: '32%', textAlign: 'center'}}>
-                {__('LastRecord')}
-              </th>
-              <th style={{width: 'auto', textAlign: 'center'}}>
-                {__('Senka')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              monthRecordInfo.map(historyInfo => {
-                const {key, tsFirst, tsLast, expDiff} = historyInfo
-                const senkaDiff = expDiff * 7 / 10000
-                const cellStyle = {
-                  verticalAlign: 'middle',
-                  textAlign: 'center',
-                }
+        {
+          month && (
+            <Table
+              style={{tableLayout: 'fixed'}}
+              fill
+              bordered condensed hover>
+              <thead>
+                <tr>
+                  <th style={{width: '32%', textAlign: 'center'}}>
+                    {__('FirstRecord')}
+                  </th>
+                  <th style={{width: '32%', textAlign: 'center'}}>
+                    {__('LastRecord')}
+                  </th>
+                  <th style={{width: 'auto', textAlign: 'center'}}>
+                    {__('Senka')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  monthRecordInfo.map(historyInfo => {
+                    const {key, tsFirst, tsLast, expDiff} = historyInfo
+                    const senkaDiff = expDiff * 7 / 10000
+                    const cellStyle = {
+                      verticalAlign: 'middle',
+                      textAlign: 'center',
+                    }
 
-                return (
-                  <tr key={key}>
-                    <td
-                      style={cellStyle}>
-                      {fmtTime(tsFirst)}
-                    </td>
-                    <td
-                      style={cellStyle}>
-                      {fmtTime(tsLast)}
-                    </td>
-                    <td
-                      style={{
-                        ...cellStyle,
-                        fontSize: '1.2em',
-                        fontWeight: 'bold',
-                      }}>
-                      {senkaDiff.toFixed(2)}
-                    </td>
-                  </tr>
-                )
-              })
-            }
-          </tbody>
-        </Table>
+                    return (
+                      <tr key={key}>
+                        <td
+                          style={cellStyle}>
+                          {fmtTime(tsFirst)}
+                        </td>
+                        <td
+                          style={cellStyle}>
+                          {fmtTime(tsLast)}
+                        </td>
+                        <td
+                          style={{
+                            ...cellStyle,
+                            fontSize: '1.2em',
+                            fontWeight: 'bold',
+                          }}>
+                          {senkaDiff.toFixed(2)}
+                        </td>
+                      </tr>
+                    )
+                  })
+                }
+              </tbody>
+            </Table>
+          )
+        }
       </Panel>
     )
   }
