@@ -111,7 +111,7 @@ const sortieInfoRowsSelector = createSelector(
       const bossRanksObj = _.get(rawSortieInfo,'boss',{})
       // e.g. [{winRank: 'S', count: 1}, ...]
       const bossRanks = _.flatMap(
-        _.words('S A B C D E'),
+        'S A B C D E'.split(' '),
         winRank => {
           const count = _.get(bossRanksObj,winRank,0)
           return count > 0 ? [{winRank, count}] : []
