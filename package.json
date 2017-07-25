@@ -49,6 +49,6 @@
     "shallowequal": "^1.0.2"
   },
   "dependencies": {
-    "subtender": "^0.4.1"
+    "subtender": "^0.6.0"
   }
 }

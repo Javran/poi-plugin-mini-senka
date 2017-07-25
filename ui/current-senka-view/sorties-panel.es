@@ -16,6 +16,7 @@ import {
   sortieInfoRowsSelector,
 } from '../../selectors'
 import { mapDispatchToProps } from '../../store'
+import { BossCountCell } from './boss-count-cell'
 
 class SortiesPanelImpl extends PureComponent {
   static propTypes = {
@@ -241,7 +242,11 @@ class SortiesPanelImpl extends PureComponent {
                     <td
                       className={textClass}
                       style={cellStyle}>
-                      {sortieInfo.bossCount}
+                      <BossCountCell
+                        prefix={`mini-senka-tooltip-current-${mapId}-`}
+                        bossCount={sortieInfo.bossCount}
+                        bossRanks={sortieInfo.bossRanks}
+                      />
                     </td>
                     {
                       this.renderControlCell(
