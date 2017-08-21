@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { createStructuredSelector } from 'reselect'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -6,6 +7,7 @@ import {
   DropdownButton, MenuItem,
   Table,
   ButtonGroup,
+  OverlayTrigger, Tooltip,
 } from 'react-bootstrap'
 import moment from 'moment'
 import { modifyObject } from 'subtender'
@@ -107,32 +109,46 @@ class HistorySenkaViewImpl extends Component {
               <tbody>
                 {
                   monthRecordInfo.map(historyInfo => {
-                    const {key, tsFirst, tsLast, expDiff} = historyInfo
+                    const {key, tsFirst, tsLast, expDiff, sorties} = historyInfo
                     const senkaDiff = expDiff * 7 / 10000
                     const cellStyle = {
                       verticalAlign: 'middle',
                       textAlign: 'center',
                     }
 
-                    return (
+                    const content = [
+                      (<td key="1" style={cellStyle}>{fmtTime(tsFirst)}</td>),
+                      (<td key="2" style={cellStyle}>{fmtTime(tsLast)} </td>),
+                      (<td
+                         key="3"
+                         style={{
+                           ...cellStyle,
+                           fontSize: '1.2em',
+                           fontWeight: 'bold',
+                         }}>
+                        {senkaDiff.toFixed(2)}
+                      </td>),
+                    ]
+
+                    return _.isEmpty(sorties) ? (
                       <tr key={key}>
-                        <td
-                          style={cellStyle}>
-                          {fmtTime(tsFirst)}
-                        </td>
-                        <td
-                          style={cellStyle}>
-                          {fmtTime(tsLast)}
-                        </td>
-                        <td
-                          style={{
-                            ...cellStyle,
-                            fontSize: '1.2em',
-                            fontWeight: 'bold',
-                          }}>
-                          {senkaDiff.toFixed(2)}
-                        </td>
+                        {content}
                       </tr>
+                    ) : (
+                      <OverlayTrigger
+                        key={key}
+                        placement="top"
+                        overlay={
+                          <Tooltip
+                            id={`mini-senka-hist-rec-${key}`} >
+                            {JSON.stringify(sorties)}
+                          </Tooltip>
+                        }
+                        >
+                        <tr>
+                          {content}
+                        </tr>
+                      </OverlayTrigger>
                     )
                   })
                 }
