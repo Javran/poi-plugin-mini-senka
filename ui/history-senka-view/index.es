@@ -10,7 +10,7 @@ import {
   OverlayTrigger, Tooltip,
 } from 'react-bootstrap'
 import moment from 'moment'
-import { modifyObject } from 'subtender'
+import { modifyObject, generalComparator } from 'subtender'
 
 import { PTyp } from '../../ptyp'
 import { __ } from '../../tr'
@@ -138,12 +138,39 @@ class HistorySenkaViewImpl extends Component {
                       <OverlayTrigger
                         key={key}
                         placement="top"
-                        overlay={
-                          <Tooltip
-                            id={`mini-senka-hist-rec-${key}`} >
-                            {JSON.stringify(sorties)}
+                        overlay={(
+                          <Tooltip id={`mini-senka-hist-rec-${key}`}>
+                            <Table
+                              style={{
+                                tableLayout: 'fixed',
+                                paddingBottom: 0,
+                                marginBottom: 0,
+                              }}
+                              fill
+                              bordered condensed hover>
+                              <tbody>
+                                {
+                                  Object.keys(sorties).map(Number)
+                                    .sort(generalComparator).map(mapId => {
+                                      const area = Math.floor(mapId / 10)
+                                      const num = mapId % 10
+                                      const record = sorties[mapId]
+                                      const bossCount = _.sum(
+                                        _.compact(Object.values(record.boss))
+                                      )
+                                      return (
+                                        <tr key={mapId}>
+                                          <td>{`${area}-${num}`}</td>
+                                          <td>{bossCount}</td>
+                                          <td>{record.count}</td>
+                                        </tr>
+                                      )
+                                    })
+                                }
+                              </tbody>
+                            </Table>
                           </Tooltip>
-                        }
+                        )}
                         >
                         <tr>
                           {content}
