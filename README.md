@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/poi-plugin-mini-senka.svg)](https://badge.fury.io/js/poi-plugin-mini-senka)
+
 Mini Senka is a [poi](https://github.com/poooi/poi) plugin that provides
 simple but useful information to assist your monthly ranking.
 
