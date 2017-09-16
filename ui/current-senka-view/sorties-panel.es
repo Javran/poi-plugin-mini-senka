@@ -198,10 +198,10 @@ class SortiesPanelImpl extends PureComponent {
                 {__('SortieTable.Map')}
               </th>
               <th style={{width: '25%', textAlign: 'center'}}>
-                {__('SortieTable.Sortie')}
+                {__('SortieTable.Boss')}
               </th>
               <th style={{width: '25%', textAlign: 'center'}}>
-                {__('SortieTable.Boss')}
+                {__('SortieTable.Sortie')}
               </th>
               <th style={{width: 'auto', textAlign: 'center'}}>
                 {__('SortieTable.Control')}
@@ -237,16 +237,16 @@ class SortiesPanelImpl extends PureComponent {
                     <td
                       className={textClass}
                       style={cellStyle}>
-                      {sortieInfo.sortieCount}
-                    </td>
-                    <td
-                      className={textClass}
-                      style={cellStyle}>
                       <BossCountCell
                         prefix={`mini-senka-tooltip-current-${mapId}-`}
                         bossCount={sortieInfo.bossCount}
                         bossRanks={sortieInfo.bossRanks}
                       />
+                    </td>
+                    <td
+                      className={textClass}
+                      style={cellStyle}>
+                      {sortieInfo.sortieCount}
                     </td>
                     {
                       this.renderControlCell(
