@@ -30,6 +30,8 @@ A table of sortie records is also available:
 - "Boss" column represents the number of times you obtain a rank in boss node.
   You can move mouse over boss cells to see details about battle ranks.
 
+![current-part-popup](docs/current-part-popup.jpg)
+
 There are also simple controls for you to rearrange table columns:
 
 - Click "★" to favorite a map, a favorited map always shows on top of the table.
