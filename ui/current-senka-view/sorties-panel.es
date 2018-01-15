@@ -171,7 +171,8 @@ class SortiesPanelImpl extends PureComponent {
     return (
       <Panel
         style={{marginBottom: 5}}
-        header={
+      >
+        <Panel.Heading>
           <div style={{display: 'flex', alignItems: 'center'}}>
             <div style={{flex: 1}}>
               {__('Sorties')}
@@ -187,81 +188,84 @@ class SortiesPanelImpl extends PureComponent {
               {__('SortieTable.ShowAll')}
             </Button>
           </div>
-        }>
-        <Table
-          style={{tableLayout: 'fixed'}}
-          fill
-          bordered condensed hover>
-          <thead>
-            <tr>
-              <th style={{width: '27%', textAlign: 'center'}}>
-                {__('SortieTable.Map')}
-              </th>
-              <th style={{width: '25%', textAlign: 'center'}}>
-                {__('SortieTable.Boss')}
-              </th>
-              <th style={{width: '25%', textAlign: 'center'}}>
-                {__('SortieTable.Sortie')}
-              </th>
-              <th style={{width: 'auto', textAlign: 'center'}}>
-                {__('SortieTable.Control')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              sortieInfoRows.map((sortieInfoRow,ind) => {
-                const {mapId, type, sortieInfo} = sortieInfoRow
-                const mapArea = Math.floor(mapId/10)
-                const mapNo = mapId - mapArea*10
-                const textClass =
-                  type === 'starred' ? 'text-primary' :
-                  type === 'normal' ? 'text-default' :
-                  type === 'hidden' ? 'text-muted' :
-                  ''
-                const cellStyle = {
-                  verticalAlign: 'middle',
-                  textAlign: 'center',
-                }
-                return (
-                  <tr key={mapId}>
-                    <td
-                      className={textClass}
-                      style={{
-                        ...cellStyle,
-                        fontSize: '1.1em',
-                        fontWeight: 'bold',
-                      }}>
-                      {`${mapArea}-${mapNo}`}
-                    </td>
-                    <td
-                      className={textClass}
-                      style={cellStyle}>
-                      <BossCountCell
-                        prefix={`mini-senka-tooltip-current-${mapId}-`}
-                        bossCount={sortieInfo.bossCount}
-                        bossRanks={sortieInfo.bossRanks}
-                      />
-                    </td>
-                    <td
-                      className={textClass}
-                      style={cellStyle}>
-                      {sortieInfo.sortieCount}
-                    </td>
-                    {
-                      this.renderControlCell(
-                        cellStyle,
-                        sortieInfoRow,
-                        ind,
-                        sortieInfoRows,
-                      )
-                    }
-                  </tr>
-                )
-              })
-            }
-          </tbody>
-        </Table>
+        </Panel.Heading>
+        <Panel.Body>
+          <Table
+            style={{tableLayout: 'fixed'}}
+            fill
+            bordered condensed hover>
+            <thead>
+              <tr>
+                <th style={{width: '27%', textAlign: 'center'}}>
+                  {__('SortieTable.Map')}
+                </th>
+                <th style={{width: '25%', textAlign: 'center'}}>
+                  {__('SortieTable.Boss')}
+                </th>
+                <th style={{width: '25%', textAlign: 'center'}}>
+                  {__('SortieTable.Sortie')}
+                </th>
+                <th style={{width: 'auto', textAlign: 'center'}}>
+                  {__('SortieTable.Control')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                sortieInfoRows.map((sortieInfoRow,ind) => {
+                  const {mapId, type, sortieInfo} = sortieInfoRow
+                  const mapArea = Math.floor(mapId/10)
+                  const mapNo = mapId - mapArea*10
+                  const textClass =
+                    type === 'starred' ? 'text-primary' :
+                    type === 'normal' ? 'text-default' :
+                    type === 'hidden' ? 'text-muted' :
+                    ''
+                  const cellStyle = {
+                    verticalAlign: 'middle',
+                    textAlign: 'center',
+                  }
+
+                  return (
+                    <tr key={mapId}>
+                      <td
+                        className={textClass}
+                        style={{
+                          ...cellStyle,
+                          fontSize: '1.1em',
+                          fontWeight: 'bold',
+                        }}>
+                        {`${mapArea}-${mapNo}`}
+                      </td>
+                      <td
+                        className={textClass}
+                        style={cellStyle}>
+                        <BossCountCell
+                          prefix={`mini-senka-tooltip-current-${mapId}-`}
+                          bossCount={sortieInfo.bossCount}
+                          bossRanks={sortieInfo.bossRanks}
+                        />
+                      </td>
+                      <td
+                        className={textClass}
+                        style={cellStyle}>
+                        {sortieInfo.sortieCount}
+                      </td>
+                      {
+                        this.renderControlCell(
+                          cellStyle,
+                          sortieInfoRow,
+                          ind,
+                          sortieInfoRows,
+                        )
+                      }
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </Table>
+        </Panel.Body>
       </Panel>
     )
   }

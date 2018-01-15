@@ -66,123 +66,125 @@ class HistorySenkaViewImpl extends Component {
       monthRecordInfo,
     } = this.props
     return (
-      <Panel
-        header={
+      <Panel>
+        <Panel.Heading>
           <div>{__('History')}</div>
-        }>
-        <ButtonGroup
-          style={{padding: 10}}
-          fill justified>
-          <DropdownButton
-            onSelect={this.handleChangeMonth}
-            title={this.monthToStr(month)}
-            id="mini-senka-history-label-dropdown">
-            <MenuItem key="none" eventKey={null}>None</MenuItem>
-            {
-              monthRecordsInfo.map(({month: curMonth}) => (
-                <MenuItem key={curMonth} eventKey={curMonth}>
-                  {this.monthToStr(curMonth)}
-                </MenuItem>
-              ))
-            }
-          </DropdownButton>
-        </ButtonGroup>
-        {
-          month && (
-            <Table
-              style={{tableLayout: 'fixed'}}
-              fill
-              bordered condensed hover>
-              <thead>
-                <tr>
-                  <th style={{width: '32%', textAlign: 'center'}}>
-                    {__('FirstRecord')}
-                  </th>
-                  <th style={{width: '32%', textAlign: 'center'}}>
-                    {__('LastRecord')}
-                  </th>
-                  <th style={{width: 'auto', textAlign: 'center'}}>
-                    {__('Senka')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  monthRecordInfo.map(historyInfo => {
-                    const {key, tsFirst, tsLast, expDiff, sorties} = historyInfo
-                    const senkaDiff = expDiff * 7 / 10000
-                    const cellStyle = {
-                      verticalAlign: 'middle',
-                      textAlign: 'center',
-                    }
+        </Panel.Heading>
+        <Panel.Body>
+          <ButtonGroup
+            style={{padding: 10}}
+            fill justified>
+            <DropdownButton
+              onSelect={this.handleChangeMonth}
+              title={this.monthToStr(month)}
+              id="mini-senka-history-label-dropdown">
+              <MenuItem key="none" eventKey={null}>None</MenuItem>
+              {
+                monthRecordsInfo.map(({month: curMonth}) => (
+                  <MenuItem key={curMonth} eventKey={curMonth}>
+                    {this.monthToStr(curMonth)}
+                  </MenuItem>
+                ))
+              }
+            </DropdownButton>
+          </ButtonGroup>
+          {
+            month && (
+              <Table
+                style={{tableLayout: 'fixed'}}
+                fill
+                bordered condensed hover>
+                <thead>
+                  <tr>
+                    <th style={{width: '32%', textAlign: 'center'}}>
+                      {__('FirstRecord')}
+                    </th>
+                    <th style={{width: '32%', textAlign: 'center'}}>
+                      {__('LastRecord')}
+                    </th>
+                    <th style={{width: 'auto', textAlign: 'center'}}>
+                      {__('Senka')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    monthRecordInfo.map(historyInfo => {
+                      const {key, tsFirst, tsLast, expDiff, sorties} = historyInfo
+                      const senkaDiff = expDiff * 7 / 10000
+                      const cellStyle = {
+                        verticalAlign: 'middle',
+                        textAlign: 'center',
+                      }
 
-                    const content = [
-                      (<td key="1" style={cellStyle}>{fmtTime(tsFirst)}</td>),
-                      (<td key="2" style={cellStyle}>{fmtTime(tsLast)} </td>),
-                      (<td
-                         key="3"
-                         style={{
-                           ...cellStyle,
-                           fontSize: '1.2em',
-                           fontWeight: 'bold',
-                         }}>
-                        {senkaDiff.toFixed(2)}
-                      </td>),
-                    ]
+                      const content = [
+                        (<td key="1" style={cellStyle}>{fmtTime(tsFirst)}</td>),
+                        (<td key="2" style={cellStyle}>{fmtTime(tsLast)} </td>),
+                        (<td
+                           key="3"
+                           style={{
+                             ...cellStyle,
+                             fontSize: '1.2em',
+                             fontWeight: 'bold',
+                           }}>
+                          {senkaDiff.toFixed(2)}
+                        </td>),
+                      ]
 
-                    return _.isEmpty(sorties) ? (
-                      <tr key={key}>
-                        {content}
-                      </tr>
-                    ) : (
-                      <OverlayTrigger
-                        key={key}
-                        placement="top"
-                        overlay={(
-                          <Tooltip id={`mini-senka-hist-rec-${key}`}>
-                            <Table
-                              style={{
-                                tableLayout: 'fixed',
-                                paddingBottom: 0,
-                                marginBottom: 0,
-                              }}
-                              fill
-                              bordered condensed hover>
-                              <tbody>
-                                {
-                                  Object.keys(sorties).map(Number)
-                                    .sort(generalComparator).map(mapId => {
-                                      const area = Math.floor(mapId / 10)
-                                      const num = mapId % 10
-                                      const record = sorties[mapId]
-                                      const bossCount = _.sum(
-                                        _.compact(Object.values(record.boss))
-                                      )
-                                      return (
-                                        <tr key={mapId}>
-                                          <td>{`${area}-${num}`}</td>
-                                          <td>{bossCount}</td>
-                                          <td>{record.count}</td>
-                                        </tr>
-                                      )
-                                    })
-                                }
-                              </tbody>
-                            </Table>
-                          </Tooltip>
-                        )}
-                        >
-                        <tr>
+                      return _.isEmpty(sorties) ? (
+                        <tr key={key}>
                           {content}
                         </tr>
-                      </OverlayTrigger>
-                    )
-                  })
-                }
-              </tbody>
-            </Table>
-          )
-        }
+                      ) : (
+                        <OverlayTrigger
+                          key={key}
+                          placement="top"
+                          overlay={(
+                            <Tooltip id={`mini-senka-hist-rec-${key}`}>
+                              <Table
+                                style={{
+                                  tableLayout: 'fixed',
+                                  paddingBottom: 0,
+                                  marginBottom: 0,
+                                }}
+                                      fill
+                                      bordered condensed hover>
+                                <tbody>
+                                  {
+                                    Object.keys(sorties).map(Number)
+                                          .sort(generalComparator).map(mapId => {
+                                            const area = Math.floor(mapId / 10)
+                                            const num = mapId % 10
+                                            const record = sorties[mapId]
+                                            const bossCount = _.sum(
+                                              _.compact(Object.values(record.boss))
+                                            )
+                                            return (
+                                              <tr key={mapId}>
+                                                <td>{`${area}-${num}`}</td>
+                                                <td>{bossCount}</td>
+                                                <td>{record.count}</td>
+                                              </tr>
+                                            )
+                                          })
+                                  }
+                                </tbody>
+                              </Table>
+                            </Tooltip>
+                          )}
+                          >
+                          <tr>
+                            {content}
+                          </tr>
+                        </OverlayTrigger>
+                      )
+                    })
+                  }
+                </tbody>
+              </Table>
+            )
+          }
+        </Panel.Body>
       </Panel>
     )
   }

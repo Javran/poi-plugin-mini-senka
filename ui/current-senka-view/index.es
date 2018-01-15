@@ -56,33 +56,45 @@ class CurrentSenkaViewImpl extends Component {
     const lastRecord = _.get(senkaInfo,'expRange.last',null)
     return (
       <Panel>
-        <div style={{display: 'flex', alignItems: 'stretch'}}>
-          <Panel
-            style={{width: '45%', marginRight: 10}}
-            header={<div>{__('Time')}</div>}>
-            <Timepiece
-              header={__('FirstRecord')}
-              timestamp={
-                _.get(firstRecord,'time') || null
-              } />
-            <Timepiece
-              header={__('LastRecord')}
-              timestamp={
-                _.get(lastRecord,'time') || null
-              } />
-            <Timepiece
-              header={__('NextAccounting')}
-              timestamp={accountingInfo.timestamp} />
-          </Panel>
-          <Panel
-            style={{width: '55%'}}
-            header={<div>{__('Senka')}</div>}>
-            {
-              this.renderSenkaDiff(senkaInfo)
-            }
-          </Panel>
-        </div>
-        <SortiesPanel />
+        <Panel.Body>
+          <div style={{display: 'flex', alignItems: 'stretch'}}>
+            <Panel
+              style={{width: '45%', marginRight: 10}}
+            >
+              <Panel.Heading>
+                <div>{__('Time')}</div>
+              </Panel.Heading>
+              <Panel.Body>
+                <Timepiece
+                  header={__('FirstRecord')}
+                  timestamp={
+                    _.get(firstRecord,'time') || null
+                  } />
+                <Timepiece
+                  header={__('LastRecord')}
+                  timestamp={
+                    _.get(lastRecord,'time') || null
+                  } />
+                <Timepiece
+                  header={__('NextAccounting')}
+                  timestamp={accountingInfo.timestamp} />
+              </Panel.Body>
+            </Panel>
+            <Panel
+              style={{width: '55%'}}
+            >
+              <Panel.Heading>
+                <div>{__('Senka')}</div>
+              </Panel.Heading>
+              <Panel.Body>
+                {
+                  this.renderSenkaDiff(senkaInfo)
+                }
+              </Panel.Body>
+            </Panel>
+          </div>
+          <SortiesPanel />
+        </Panel.Body>
       </Panel>
     )
   }
