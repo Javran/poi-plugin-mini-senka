@@ -191,7 +191,10 @@ class SortiesPanelImpl extends PureComponent {
         </Panel.Heading>
         <Panel.Body>
           <Table
-            style={{tableLayout: 'fixed'}}
+            style={{
+              tableLayout: 'fixed',
+              marginBottom: 0,
+            }}
             fill
             bordered condensed hover>
             <thead>

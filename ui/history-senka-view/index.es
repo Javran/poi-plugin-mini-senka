@@ -72,7 +72,7 @@ class HistorySenkaViewImpl extends Component {
         </Panel.Heading>
         <Panel.Body>
           <ButtonGroup
-            style={{padding: 10}}
+            style={{marginBottom: 8}}
             fill justified>
             <DropdownButton
               onSelect={this.handleChangeMonth}
@@ -91,7 +91,10 @@ class HistorySenkaViewImpl extends Component {
           {
             month && (
               <Table
-                style={{tableLayout: 'fixed'}}
+                style={{
+                  tableLayout: 'fixed',
+                  marginBottom: 0,
+                }}
                 fill
                 bordered condensed hover>
                 <thead>
