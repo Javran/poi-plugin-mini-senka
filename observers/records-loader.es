@@ -1,3 +1,5 @@
+import _ from 'lodash'
+import { modifyObject } from 'subtender'
 import { observer } from 'redux-observers'
 
 import { admiralIdSelector } from '../selectors'
@@ -23,8 +25,18 @@ const admiralIdObserver = observer(
       clearLoadRecordLock()
       const admiralId = cur
       loadRecordLock = setTimeout(() => {
-        loadRecords(admiralId, records =>
-          boundActionCreator.recordsReplace(records))
+        loadRecords(admiralId, records => {
+          boundActionCreator.recordsReplace(records)
+          if (records.records.length > 0) {
+            const lastMonth = _.last(records.records).month
+            boundActionCreator.uiModify(
+              modifyObject(
+                'history',
+                modifyObject('month', () => lastMonth)
+              )
+            )
+          }
+        })
         loadRecordLock = null
       })
     }
