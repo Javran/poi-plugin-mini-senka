@@ -11,6 +11,13 @@ Therefore senka obtained from clearing EO, or "Z-cannon"
 (i.e. +350 senka upon clearing quarterly quest "戦果拡張任務！「Z作戦」前段作戦")
 is not counted.
 
+# Changelog
+
+### 0.4.2 (pending)
+
+- UI tweak
+- History will focus on most recent recorded month upon start.
+
 # Introduction
 
 The UI consists of two parts: current senka & senka history.
