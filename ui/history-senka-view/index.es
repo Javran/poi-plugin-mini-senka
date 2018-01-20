@@ -91,6 +91,7 @@ class HistorySenkaViewImpl extends Component {
           {
             month && (
               <Table
+                className="history-table"
                 style={{
                   tableLayout: 'fixed',
                   marginBottom: 0,

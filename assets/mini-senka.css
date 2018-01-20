@@ -13,3 +13,7 @@
     flex-direction: column;
     justify-content: center;
 }
+
+#poi-plugin-mini-senka .history-table table tbody tr td {
+    padding: 0;
+}
