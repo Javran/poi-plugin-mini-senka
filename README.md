@@ -13,7 +13,7 @@ is not counted.
 
 # Changelog
 
-### 0.4.2 (pending)
+### 0.4.2
 
 - UI tweak
 - History will focus on most recent recorded month upon start.
