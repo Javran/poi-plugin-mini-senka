@@ -115,7 +115,7 @@ class HistorySenkaViewImpl extends Component {
                   {
                     monthRecordInfo.map(historyInfo => {
                       const {key, tsFirst, tsLast, expDiff, sorties} = historyInfo
-                      const senkaDiff = expDiff * 7 / 10000
+                      const senkaDiff = _.isNumber(expDiff) ? (expDiff * 7 / 10000) : null
                       const cellStyle = {
                         verticalAlign: 'middle',
                         textAlign: 'center',
@@ -131,7 +131,9 @@ class HistorySenkaViewImpl extends Component {
                              fontSize: '1.2em',
                              fontWeight: 'bold',
                            }}>
-                          {senkaDiff.toFixed(2)}
+                          {
+                            _.isNumber(senkaDiff) ? senkaDiff.toFixed(2) : '-'
+                          }
                         </td>),
                       ]
 

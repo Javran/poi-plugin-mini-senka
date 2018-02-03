@@ -40,7 +40,9 @@ const monthRecordInfoSelector = createSelector(
       const expFirst = _.get(record,'expRange.first.exp')
       const tsLast = _.get(record,'expRange.last.time')
       const expLast = _.get(record,'expRange.last.exp')
-      const expDiff = expLast - expFirst
+      const expDiff = (_.isNumber(expLast) && _.isNumber(expFirst)) ?
+        expLast - expFirst :
+        null
       const {sorties} = record
       return {
         key, tsFirst, tsLast, expDiff, sorties,
