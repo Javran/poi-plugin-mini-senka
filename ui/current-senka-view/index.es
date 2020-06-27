@@ -5,6 +5,9 @@ import { connect } from 'react-redux'
 import {
   Panel,
 } from 'react-bootstrap'
+
+import { store } from 'views/create-store'
+
 import { __ } from '../../tr'
 
 import {
@@ -54,6 +57,17 @@ class CurrentSenkaViewImpl extends Component {
     const senkaInfo = this.props.record
     const firstRecord = _.get(senkaInfo,'expRange.first',null)
     const lastRecord = _.get(senkaInfo,'expRange.last',null)
+    if (lastRecord !== null) {
+      // broadcast a bit of the information for other plugins to received.
+      // since the predicate is on lastRecord, this resulting action
+      // is guaranteed to have both expRange.first and expRange.last filled.
+      // note that the existence of lastRecord also implies the existence of first one
+      // as both can be the same record.
+      store.dispatch({
+        type: '@poi-plugin-mini-senka@SenkaUpdate',
+        senkaInfo,
+      })
+    }
     return (
       <Panel>
         <Panel.Body>
