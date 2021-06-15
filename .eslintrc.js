@@ -86,6 +86,7 @@ module.exports = {
       'reselect',
       'react-bootstrap',
       'react-fontawesome',
+      '@blueprintjs/core',
       'path-extra',
       'fs-extra',
       'lodash',

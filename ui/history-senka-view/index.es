@@ -4,13 +4,22 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   Panel,
-  DropdownButton, MenuItem,
   Table,
-  ButtonGroup,
   OverlayTrigger, Tooltip,
 } from 'react-bootstrap'
+
+import {
+  Button,
+  Menu,
+  MenuItem,
+  Position,
+  ButtonGroup,
+} from '@blueprintjs/core'
+
 import moment from 'moment'
 import { modifyObject, generalComparator } from 'subtender'
+
+import { Popover } from 'views/components/etc/overlay'
 
 import { PTyp } from '../../ptyp'
 import { __ } from '../../tr'
@@ -39,7 +48,7 @@ class HistorySenkaViewImpl extends Component {
     month: null,
   }
 
-  handleChangeMonth = month =>
+  handleChangeMonth = month => () =>
     this.props.uiModify(
       modifyObject(
         'history',
@@ -65,28 +74,42 @@ class HistorySenkaViewImpl extends Component {
       month,
       monthRecordInfo,
     } = this.props
+
+
+    const menuContent = (
+      <Menu>
+        <MenuItem
+          key="none"
+          text="None"
+          onClick={this.handleChangeMonth(null)}
+        />
+        {
+          monthRecordsInfo.map(({month: curMonth}) => (
+            <MenuItem
+              key={curMonth}
+              text={this.monthToStr(curMonth)}
+              onClick={this.handleChangeMonth(curMonth)}
+            />
+          ))
+        }
+      </Menu>
+    )
+
     return (
       <Panel>
         <Panel.Heading>
           <div>{__('History')}</div>
         </Panel.Heading>
         <Panel.Body>
-          <ButtonGroup
-            style={{marginBottom: 8}}
-            fill justified>
-            <DropdownButton
-              onSelect={this.handleChangeMonth}
-              title={this.monthToStr(month)}
-              id="mini-senka-history-label-dropdown">
-              <MenuItem key="none" eventKey={null}>None</MenuItem>
-              {
-                monthRecordsInfo.map(({month: curMonth}) => (
-                  <MenuItem key={curMonth} eventKey={curMonth}>
-                    {this.monthToStr(curMonth)}
-                  </MenuItem>
-                ))
-              }
-            </DropdownButton>
+          <ButtonGroup fill>
+            <Popover
+              content={menuContent}
+              position={Position.BOTTOM}
+            >
+              <Button>
+                {this.monthToStr(month)}
+              </Button>
+            </Popover>
           </ButtonGroup>
           {
             month && (
