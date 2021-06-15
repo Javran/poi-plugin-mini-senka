@@ -18,6 +18,7 @@ import {
 
 import moment from 'moment'
 import { modifyObject, generalComparator } from 'subtender'
+import styled from 'styled-components'
 
 import { Popover } from 'views/components/etc/overlay'
 
@@ -35,6 +36,12 @@ import {
 } from '../../store'
 
 const fmtTime = t => moment(t).format('YYYY-MM-DD HH:mm')
+
+const CompactMenu = styled(Menu)`
+  & .bp3-menu-item {
+    padding: 2px 6px
+  }
+`
 
 class HistorySenkaViewImpl extends Component {
   static propTypes = {
@@ -77,7 +84,7 @@ class HistorySenkaViewImpl extends Component {
 
 
     const menuContent = (
-      <Menu>
+      <CompactMenu>
         <MenuItem
           key="none"
           text="None"
@@ -92,7 +99,7 @@ class HistorySenkaViewImpl extends Component {
             />
           ))
         }
-      </Menu>
+      </CompactMenu>
     )
 
     return (

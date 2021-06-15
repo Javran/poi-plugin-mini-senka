@@ -88,6 +88,7 @@ module.exports = {
       'react-fontawesome',
       '@blueprintjs/core',
       'path-extra',
+      'styled-components',
       'fs-extra',
       'lodash',
       'cson',
