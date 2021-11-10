@@ -32,8 +32,9 @@ const exportThisMonthToJson = () => {
   }
   console.log(`Selected month ${monRecord.month}, ${monRecord.records.length} records.`)
   copy(JSON.stringify(
-    monRecord.records,
+    monRecord,
     [
+      'records', 'month',
       'key', 'record', 'expRange',
       'first', 'last', 'exp', 'time',
     ]))
