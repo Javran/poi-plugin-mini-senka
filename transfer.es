@@ -12,10 +12,15 @@
  */
 
 import _ from 'lodash'
+import { modifyObject } from 'subtender'
 
 import {
   recordDataRootSelector,
 } from './selectors'
+
+import {
+  boundActionCreator as bac,
+} from './store'
 
 /* eslint-disable no-console */
 const exportThisMonthToJson = () => {
@@ -41,8 +46,37 @@ const exportThisMonthToJson = () => {
   console.log('Copied to clipboard.')
 }
 
-const importFromJson = () => {
-  // TODO
+const importFromJson = xs => {
+  /*
+    The assumption is that the data is directly pasted as the input
+    of this function so by the time we get here it's already evaluated
+    as if it's a JS value, which in turn should result in an Array.
+   */
+  if (!Array.isArray(xs)) {
+    console.error('Input is not an Array.')
+    return
+  }
+
+  bac.recordsModify(
+    modifyObject(
+      'records',
+      recordsRoot => {
+        // TODO: to object, insert, then convert back and maintain order.
+        const rootObj = _.fromPairs(
+          _.map(recordsRoot, ({month, records}) => [month, records])
+        )
+
+        const recordsRootOut = _.sortBy(
+          _.map(
+            _.toPairs(rootObj),
+            ([month, records]) => ({month, records})),
+          ['month']
+        )
+        console.log(_.isEqual(recordsRootOut, recordsRoot))
+        return recordsRoot
+      }
+    )
+  )
 }
 /* eslint-enable no-console */
 
