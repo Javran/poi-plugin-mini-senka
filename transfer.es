@@ -3,7 +3,11 @@
   between machines.
 
   TODO: impl
-  Currently only senka record of the latest month is exported.
+
+  Limitation:
+  - Currently only senka record of the latest month is exported
+  - only expRange is exported and imported - sortie counter
+    has the problem that there is no way to make importing them idempotent.
 
  */
 
@@ -24,6 +28,7 @@ const exportThisMonthToJson = () => {
     monRecord.records.length === 0
   ) {
     console.log('Nothing to export.')
+    return
   }
   console.log(`Selected month ${monRecord.month}, ${monRecord.records.length} records.`)
   copy(JSON.stringify(
