@@ -22,6 +22,10 @@ import {
   boundActionCreator as bac,
 } from './store'
 
+import {
+  emptyEntity,
+} from './records'
+
 /* eslint-disable no-console */
 const exportThisMonthToJsonWithCallback = onResult => {
   const {getStore} = window
@@ -51,20 +55,91 @@ const exportThisMonthToJson = () => exportThisMonthToJsonWithCallback(result => 
   console.log('Copied to clipboard.')
 })
 
-const importedValToRecordsModifier = _v => recordsRoot => {
-  const rootObj = _.fromPairs(
-    _.map(recordsRoot, ({month, records}) => [month, records])
-  )
+const isValidExpTime = v =>
+  typeof v === 'object' &&
+  typeof v.exp === 'number' &&
+  typeof v.time === 'number'
 
-  // TODO: import data to modifier functions
-  const recordModifier = _.identity
+// TODO: probably we can inline this to improve logging.
+const mergeExpRange = imp => cur => {
+  const result = {...cur}
+  if (isValidExpTime(imp.first)) {
+    if (result.first === null || imp.first.time < result.first.time) {
+      result.first = imp.first
+    }
+  }
 
-  return _.sortBy(
-    _.map(
-      _.toPairs(recordModifier(rootObj)),
-      ([month, records]) => ({month, records})),
-    ['month']
-  )
+  if (isValidExpTime(imp.last)) {
+    if (result.last === null || imp.last.time > result.last.time) {
+      result.last = imp.last
+    }
+  }
+  return result
+}
+
+const importedValToRecordsModifier = imp => {
+  if (
+    typeof imp !== 'object' ||
+    typeof imp.month !== 'string' ||
+    !/^\d+-\d+$/.exec(imp.month) ||
+    !Array.isArray(imp.records)
+  ) {
+    console.error(`import data is invalid, keeping input intact.`)
+    return _.identity
+  }
+
+  return recordsRoot => {
+    const rootObj = _.fromPairs(
+      _.map(recordsRoot, ({month, records}) => [month, records])
+    )
+
+    const recordModifier = modifyObject(
+      imp.month,
+      (curRecordsArr = []) => {
+        const curRecords = _.fromPairs(
+          _.map(curRecordsArr, ({key, record}) => [key, record])
+        )
+
+        const batchModifier = _.flow(
+          _.map(
+            imp.records,
+            impRecord => {
+              if (
+                typeof impRecord.key !== 'string' ||
+                !/^\d+-\d+\\|\d+$/.exec(impRecord.key)
+              ) {
+                console.log(impRecord)
+                console.warn(`invalid record: ${impRecord}, keeping input intact.`)
+                return _.identity
+              }
+
+              return modifyObject(
+                impRecord.key,
+                (curEntity = emptyEntity) =>
+                  modifyObject(
+                    'expRange',
+                    mergeExpRange(impRecord.record.expRange)
+                  )(curEntity)
+              )
+            }
+          )
+        )
+        return _.sortBy(
+          _.map(
+            _.toPairs(batchModifier(curRecords)),
+            ([key, record]) => ({key, record})),
+          ['key']
+        )
+      }
+    )
+
+    return _.sortBy(
+      _.map(
+        _.toPairs(recordModifier(rootObj)),
+        ([month, records]) => ({month, records})),
+      ['month']
+    )
+  }
 }
 
 // debug tool that exports current data and import it again - this should result in no change.
